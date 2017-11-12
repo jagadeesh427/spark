@@ -21,12 +21,23 @@ cd spark-demo
 mkdir -p src/main/scala
 cd src/main/scala
 vi hw1.scala
-code::
+
+##code::
 object hw1 {
 def main(args : Array[Sting]){
 println("helllo")
 }
 }
+
+##
+cd ~/spark-demo
+vi build.sbt
+name := "hw1"
+version := "1.0"
+scalaVersion := "2.11.8"                        
+run sbt 
+run sbt package
+sbt run
 
 cd spark-demo
 ##RUN THE SCALA##
