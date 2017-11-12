@@ -1,0 +1,78 @@
+# spark
+download spark and scala binaries
+
+edit the vi .profile
+
+enter the environment variables
+###
+export SPARK_HOME=/Users/jagadeeshyadav/spark
+export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+
+export SCALA_HOME=/Users/jagadeeshyadav/scala
+export PATH=$PATH:$SCALA_HOME/bin:$SCALA_HOME/sbin
+
+###
+
+make sure scala command is working
+
+mkdir spark-demo
+cd spark-demo
+mkdir -p src/main/scala
+cd src/main/scala
+vi hw1.scala
+code::
+object hw1 {
+def main(args : Array[Sting]){
+println("helllo")
+}
+}
+
+cd spark-demo
+##RUN THE SCALA##
+
+scala src/main/scala/hw1.scala
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
