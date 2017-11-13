@@ -1,0 +1,51 @@
+
+download eclipse 
+go to marketplace and download scala
+
+1 st step
+
+create plugins
+go to home directory
+look for .sbt (cd .sbt)
+cd 0.13
+mkdir plugins
+cd plugins
+
+create vi plugins.sbt ( add addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "4.0.0") )
+ ####
+ cd  /Users/jagadeeshyadav/demo/simple-scala
+ mkdir -p src/main/scala
+  cd src/main/scala
+  vi hw.scala
+  code:
+  object hw {
+      def main(args : Array[String]) {
+      println(" Hello World")
+      }
+      }
+      
+ ###
+cd /Users/jagadeeshyadav/demo/simple-scala
+
+vi build.sbt
+
+name := "simple-scala"
+version := "1.0"
+scalaVersion := "2.11.8"
+
+###
+sbt package
+sbt run
+sbt "run-main hw"
+
+
+output:
+
+
+
+
+
+
+
+
+
