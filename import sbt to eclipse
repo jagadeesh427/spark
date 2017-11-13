@@ -1,0 +1,21 @@
+
+
+cd ~/demo/simple-scala
+mkdir simple-scala-sbt
+cd simple-scala-sbt
+mkdir -p src/main/scala
+vi build.sbt
+code:
+name := "simple-scala-sbt"
+version := "1.0"
+scalaVersion := "2.11.8"
+
+now run
+
+sbt eclipse ( make sure plugins are added otherwise it won't work)
+
+got to eclipse and import the file .
+
+
+
+
