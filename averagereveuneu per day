@@ -52,6 +52,35 @@ val ordersRDD = sc.textFile(url + "/" + tablename)
 ordersRDD.take(5).foreach(println)
 
 
+val orderItemsRDDD = sc.textFile(url + "/" + tablename2)
+
+val orderscompleted = ordersRDD.filter(rec => (rec.split(",")(3) == "COMPLETE"))
+val orders = orderscompleted.map(rec => (rec.split(",")(0).toInt, rec.split(",")(1)))
+val orderItemsmap = orderItemsRDDD.map(rec => (rec.split(",")(1).toInt, rec.split(",")(4).toFloat))
+orderscompleted.count()
+
+orderItemsmap.take(5).foreach(println)
+val orderItems = orderItemsmap.reduceByKey((acc, value) => acc + value)
+
+
+## to find the aggregassion of a particular order Id ###
+
+val filterRDD = orderItems.filter(rec => (rec._1 == 2))
+filterRDD.foreach(println)
+
+val ordersJoin = orders.join(orderItems)
+
+####we can make speration of record as we want( , or : or |) ###
+
+ordersJoin.take(5).foreach( rec => (println(rec._1 + ":" + rec._2._1 + ":" + rec._2._2)))
+
+
+
+
+
+
+
+
 
 
 
