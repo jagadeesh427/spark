@@ -1,0 +1,123 @@
+
+
+go to simple-spark
+vi build.
+
+name := "simple-spark"
+version := "1.0"
+scalaVersion := "2.11.8"
+
+libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "1.6.2"
+libraryDependencies += "com.typesafe" % "config" % "1.3.0"
+
+
+### run sbt package
+
+go to src/main
+mkdir resources
+
+
+sbt eclipse
+
+
+
+GO TO ECLPISE
+
+
+create new Package
+
+wc
+
+create new object
+object wordcount
+
+
+src/main/resources
+create a file applicaton.properties
+delpoymentMaster = local
+
+
+
+####CODE###
+package wc
+
+import org.apache.spark.SparkContext, org.apache.spark.SparkConf
+import com.typesafe.config._
+
+object wordcount {
+  def main(args : Array[String]) {
+    val appConf = ConfigFactory.load()
+    val conf = new SparkConf().setAppName("Word Count").
+    setMaster(appConf.getString("deploymentMaster"))
+    val sc = new SparkContext(conf)
+    val inputpath = args(0)
+    val outputpath = args(1)
+    
+    
+    val wc = sc.textFile(inputpath).flatMap(rec => rec.split(" ")).map(rec => (rec, 1)).
+        reduceByKey{case (x,y) => x + y}
+        wc.saveAsTextFile(outputpath)
+   
+  }
+  }
+  
+  run as
+  
+  ###Main
+  wc.wordcount
+  
+  
+  
+  Scala intepreter
+  
+  
+  
+  /Users/jagadeeshyadav/demo/data/input.txt  /Users/jagadeeshyadav/demo/data/output.txt
+  
+  
+  
+ ###### DEV AND PRO#####
+ 
+ edit application.properties
+ 
+ dev.deploymentMaster = local
+prod.deploymentMaster = yarn-client
+
+####code
+
+package wc
+
+import org.apache.spark.SparkContext, org.apache.spark.SparkConf
+import com.typesafe.config._
+
+object wordcount {
+  def main(args : Array[String]) {
+    val appConf = ConfigFactory.load()
+    val conf = new SparkConf().setAppName("Word Count").
+    setMaster(appConf.getConfig(args(2)).getString("deploymentMaster"))
+    val sc = new SparkContext(conf)
+    val inputpath = args(0)
+    val outputpath = args(1)
+    
+    
+    val wc = sc.textFile(inputpath).flatMap(rec => rec.split(" ")).map(rec => (rec, 1)).
+        reduceByKey{case (x,y) => x + y}
+        wc.saveAsTextFile(outputpath)
+   
+  }
+  }
+  
+  
+  
+  OUTPUT ARGUMENTS
+  
+  
+  /Users/jagadeeshyadav/demo/data/input.txt  /Users/jagadeeshyadav/demo/data/output.txt dev
+  
+  
+  
+  
+
+  
+  
+  
