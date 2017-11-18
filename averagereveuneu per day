@@ -1,0 +1,66 @@
+##code
+
+
+package retail
+
+import org.apache.spark.SparkContext, org.apache.spark.SparkConf
+import com.typesafe.config._
+import org.apache.hadoop.fs._
+
+object AvgRevenuedaily {
+  def main(args : Array[String]) {
+    val appConf = ConfigFactory.load()
+    val conf = new SparkConf().setAppName("AVERAGE REVENUE Daily").
+    setMaster(appConf.getConfig(args(2)).getString("deploymentMaster"))
+    val sc = new SparkContext(conf)
+    val inputpath = args(0)
+    val outputpath = args(1)
+    
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val inputpathExists = fs.exists(new Path(inputpath))
+    val outputpathExists = fs.exists(new Path(outputpath))
+    
+    if(!inputpathExists){
+      println("Input path does not exists")
+      return
+    }
+    if(outputpathExists){
+      fs.delete(new Path(outputpath), true)
+    }
+    
+    
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+SCALA INTERPRETER
+
+import org.apache.spark.SparkContext, org.apache.spark.SparkConf
+val conf = new SparkConf().setAppName("AVERAGE REVENUE Daily").setMaster("local")
+val sc = new SparkContext(conf)
+val url = "/Users/jagadeeshyadav/data/retail_db"
+val tablename = "orders"
+val ordersRDD = sc.textFile(url + "/" + tablename)
+ordersRDD.take(5).foreach(println)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
