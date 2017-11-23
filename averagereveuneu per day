@@ -51,12 +51,16 @@ val tablename = "orders"
 val ordersRDD = sc.textFile(url + "/" + tablename)
 ordersRDD.take(5).foreach(println)
 
-
+val tablename2 = "order_items"
 val orderItemsRDDD = sc.textFile(url + "/" + tablename2)
 
 val orderscompleted = ordersRDD.filter(rec => (rec.split(",")(3) == "COMPLETE"))
+orderscompleted.take(5).foreach(println)
 val orders = orderscompleted.map(rec => (rec.split(",")(0).toInt, rec.split(",")(1)))
+orders.take(5).foreach(println)
 val orderItemsmap = orderItemsRDDD.map(rec => (rec.split(",")(1).toInt, rec.split(",")(4).toFloat))
+
+
 orderscompleted.count()
 
 orderItemsmap.take(5).foreach(println)
@@ -73,6 +77,9 @@ val ordersJoin = orders.join(orderItems)
 ####we can make speration of record as we want( , or : or |) ###
 
 ordersJoin.take(5).foreach( rec => (println(rec._1 + ":" + rec._2._1 + ":" + rec._2._2)))
+
+
+
 
 
 
