@@ -1,0 +1,57 @@
+package retail
+
+import org.apache.spark.SparkContext,org.apache.spark.SparkConf
+import com.typesafe.config._
+import org.apache.hadoop.fs._
+
+object AvgRevenuedaily {
+  def main(args : Array[String]) {
+    val appConf = ConfigFactory.load()
+    val conf = new SparkConf().setAppName("AVERAGE REVENUE Daily").
+    setMaster(appConf.getConfig(args(2)).getString("deploymentMaster"))
+    val sc = new SparkContext(conf)
+    val inputpath = args(0)
+    val outputpath = args(1)
+    
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val inputpathExists = fs.exists(new Path(inputpath))
+    val outputpathExists = fs.exists(new Path(outputpath))
+    
+    if(!inputpathExists){
+      println("Input path does not exists")
+      return
+    }
+    if(outputpathExists){
+      fs.delete(new Path(outputpath), true)
+    }
+    
+    val ordersRDD = sc.textFile(inputpath + "/orders")
+    val orderItemsRDDD = sc.textFile(inputpath + "/order_items")
+    
+    val orderscompleted = ordersRDD.filter(rec => (rec.split(",")(3) == "COMPLETE"))
+    val orders = orderscompleted.map(rec => (rec.split(",")(0).toInt, rec.split(",")(1)))
+    val orderItemsmap = orderItemsRDDD.map(rec => (rec.split(",")(1).toInt, rec.split(",")(4).toFloat))     
+    val orderItems = orderItemsmap.reduceByKey((acc, value) => acc + value)
+    val ordersJoin = orders.join(orderItems)
+    val ordersJoinMap = ordersJoin.map(rec => (rec._2._1, rec._2._2))
+    val revenuePerDay = ordersJoinMap.aggregateByKey((0.0, 0))(
+      (acc, value) => (acc._1 + value, acc._2 + 1),
+      (total1, total2) => (total1._1 + total2._1, total1._2 + total2._2))
+      
+    val averageRevenuePerDay = revenuePerDay.
+      map(rec => (rec._1, BigDecimal(rec._2._1 / rec._2._2).
+          setScale(2, BigDecimal.RoundingMode.HALF_UP).toFloat))
+    val averageRevenuePerDaySorted = averageRevenuePerDay.sortByKey() 
+    
+   averageRevenuePerDaySorted.saveAsTextFile(outputpath)
+    
+    
+  }
+
+}
+
+
+
+arguments
+
+/Users/jagadeeshyadav/data/retail_db /Users/jagadeeshyadav/demo/data dev
