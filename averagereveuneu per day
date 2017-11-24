@@ -78,6 +78,27 @@ val ordersJoin = orders.join(orderItems)
 
 ordersJoin.take(5).foreach( rec => (println(rec._1 + ":" + rec._2._1 + ":" + rec._2._2)))
 
+discarding orderid
+
+##val ordersJoinMap = ordersJoin.map(rec => (rec._2._1, rec._2._2))
+
+
+val revenuePerDay = ordersJoinMap.aggregateByKey((0.0, 0))(
+      (acc, value) => (acc._1 + value, acc._2 + 1),
+      (total1, total2) => (total1._1 + total2._1, total1._2 + total2._2))
+      
+ revenuePerDay.take(5).foreach(println)
+ 
+ val averageRevenuePerDay = revenuePerDay.
+      map(rec => (rec._1, BigDecimal(rec._2._1 / rec._2._2).
+          setScale(2, BigDecimal.RoundingMode.HALF_UP).toFloat))
+          
+val averageRevenuePerDaySorted = averageRevenuePerDay.sortByKey() 
+
+  averageRevenuePerDaySorted.saveAsTextFile(outputpath)
+  
+ val outputpath = "/Users/jagadeeshyadav/demo/data/avrrevperday"
+
 
 
 
