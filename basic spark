@@ -4,6 +4,7 @@ download spark and scala binaries
 edit the vi .profile
 
 enter the environment variables
+vi .bash_profile
 ###
 export SPARK_HOME=/Users/jagadeeshyadav/spark
 export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
