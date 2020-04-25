@@ -1,0 +1,23 @@
+people.csv
+
+first_name,last_name,country
+Ernesto,Guevara,Argentina
+Vladimir,Putin,Russia
+Maria,Sharapova,Russia
+Bruce,Lee,China
+Jack,Ma,China
+~                   
+
+val df = spark.read.option("header", "true").csv ("/Users/jagadeeshyadav/people.csv")
+
+df.where($"country" === "Russia" &&$"first_name".startsWith("M")).show()
+
+The repartition() method partitions the data in memory and the partitionBy() 
+method partitions data in folders when it’s written out to disk.
+
+
+
+
+
+
+
