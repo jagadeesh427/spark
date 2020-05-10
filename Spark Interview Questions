@@ -1,11 +1,86 @@
 1. Why Spark is Faster Than Hadoop? Hadoop Vs spark
+
+HADOOP:
+Hadoop is a distributed file system (HDFS) while Spark is a compute engine running on top of Hadoop or your local file system. 
+Spark however is faster than MapReduce which was the first compute engine created when HDFS was created.
+So, when Hadoop was created, there were only two things. HDFS where data is stored and MapReduce which was the only compute engine on HDFS. To understand how Spark is faster than MapReduce, you need to understand how both MapReduce and Spark works.
+
+When a MR job starts, the first step is to read data from disk and run mappers. The output of mappers is stored back on disk. 
+Then Shuffle and sort step starts and reads the mapper output from disk and after shuffle and sort completes, it stores
+the result back on disk (there is actually some network traffic also when keys for Reduce step are gathered on 
+same node but that's true for Spark also, so let's focus on the disk step only). Then finally the reduce step starts, 
+reads the output from shuffle and sort step and finally stores the result back in HDFS.
+That's six disk accesses to complete the job. Most Hadoop clusters have 7200 RPM disks which are ridiculously slow.
+
+
+SPARK :
+Now, here is how Spark works. Like MapReduce job needs mappers and reducers, Spark has two types of processes. 
+One is transformation and other is action. When you write a Spark job, it consists of a number of transformations and a 
+few actions. When Spark job starts, it creates a DAG (Directed acyclic graph) of the job (steps it is supposed to run as 
+part of the job). Then when a job starts, it looks at the DAG and assume the first 5 steps are transformations. It 
+remembers the steps (the DAG) but doesn't really go to disk to perform the transformations. Then it encounters action. 
+At that point a Spark job goes to disk, performs the first transformation, keeps the result of transformation in memory, 
+performs the second transformation, keeps the result in memory and so on until all the steps complete. The only time it 
+goes back to disk is to write the output of the job. So, two accesses to disk. This makes Spark faster. There are other 
+things in Spark which makes it faster than MapReduce. For example, a rich set of API which enables to accomplish in 
+one Spark job what might require two or more MapReduce jobs running one after the other. Imagine, how slow that would be. 
+
 2. Which language to choose and Why? Scala vs Python
+
+Performance: Scala wins. Python is 10X slower than JVM languages. If your Python code just calls Spark libraries, 
+you'll be OK. But if your Python code makes a lot of processing, it will run slower than the Scala equivalent.
+
+Ease of use: Scala wins. Spark itself is built on Scala. Things are "more natural" using Scala. 
+
+Scala has strong static types. Errors are raised at the compilation stage. It makes your development process 
+easier especially in big projects.
+
+Scala is based on JVM so it's native for Hadoop. Hadoop is important because Spark was made on the top of the Hadoop's 
+filesystem HDFS. Python interacts with Hadoop services very badly, so developers have to use 3rd party libraries (like hadoopy).
+Scala interacts with Hadoop via native Hadoop's API in Java. 
+That's why it's very easy to write native Hadoop applications in Scala.
+
+
 3. Explain about the Apache Spark Architecture
+
+Spark applications run as independent sets of processes on a cluster, coordinated by the SparkContext object in your main program (called the driver program).
+
+Specifically, to run on a cluster, the SparkContext can connect to several types of cluster managers (either Spark’s
+own standalone cluster manager, Mesos or YARN), which allocate resources across applications. Once connected, S
+park acquires executors on nodes in the cluster, which are processes that run computations and store data for your 
+application. Next, it sends your application code (defined by JAR or Python files passed to SparkContext) to the executors.
+Finally, SparkContext sends tasks to the executors to run.
+
+
 4. What do you understand by Spark Execution Model
 5. Brief about spark internals, Spark Session vs Spark Context
+SPARKCONTEXT:
+Spark Context is a conduit( a channel) to access all spark functionality: ONly single SparkCOntext exists per JVM.
+The spark driver Program uses it to connect to the cluster Manager to communicate and submit spark job.
+It allows you to programmatically adjust Spark configuration parameers and through SparkCOntext
+the driver can Instantaite Other context such as SQLCOntext, HiveCOntext,SparkStreamingCOntext to progrom spark.
+
+SPARKSESSION:
+SparkSession can access all of SPark fucntiona;ity through a singleunified point of entry. as well as making it simplere to access
+spark functiona;ity such as DATAFRAMES and Data Sets ,catalogues and spark COnfiguration, it also subsumes the underlying contexts
+to manipulate data.
+
+https://databricks.com/blog/2016/08/15/how-to-use-sparksession-in-apache-spark-2-0.html
+
 6. Spark Driver vs Spark Executor
+Spark Executor:
+ A Spark Executor is JVM container with an allocated amount of cores and memeory on which spark runs its task.
+ each worked node launces its own spark executor, with a configurable number of cores (or threads).
+ Besides executing Spark task, an Executor also stores and caches all data partitions in its memory.
+ 
+ Spark Driver:
+ Once it ges INformation from the spark Master of all the workers in the cluster and where they are, the driver progrom
+ distributes spark tasks to each worker's executors. the driver also receives computes results from each executor's tasks.
+ 
+ 
 7. Executor vs Executor core
 8. Yarn client mode vs cluster mode
+
 9. What is RDD and what do you understand by partitions?
 10. What do you understand by Fault tolerance in Spark?
 11. Spark vs Yarn Fault tolerance
