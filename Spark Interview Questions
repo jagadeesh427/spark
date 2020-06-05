@@ -89,6 +89,11 @@ Spark Executor:
 14. Map vs FlatMap
 15. Spark Map vs Map Partition
 16. Wide vs Narrow transformations
+
+narrow transformations are esult of map(), filter. the elements that need to be compute records in
+single paritions will be presnt in single parent rdd
+
+wide transormations are results of reducebykey , groupbykey
 17. Reduce by key vs Group by key
 REDUCE BYKEY:
 
