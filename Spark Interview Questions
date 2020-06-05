@@ -90,6 +90,19 @@ Spark Executor:
 15. Spark Map vs Map Partition
 16. Wide vs Narrow transformations
 17. Reduce by key vs Group by key
+REDUCE BYKEY:
+
+Data is combined so that at each partition there should be at least one value for each key. 
+And then shuffle happens and it is sent over the network to some particular executor for some action such as reduce.
+GroupBYKEY:
+GroupByKey - groupByKey([numTasks])
+
+It doesn't merge the values for the key but directly the shuffle process happens and here lot of data gets sent 
+to each partition, almost same as the initial data.
+
+And the merging of values for each key is done after the shuffle. Here lot of data stored on final worker node so 
+resulting in out of memory issue.
+
 18. What do you understand by Spark Lineage
 19. Spark Lineage vs Spark DAG
 20. Spark cache vs Spark persist
