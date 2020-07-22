@@ -81,6 +81,22 @@ Spark Executor:
 7. Executor vs Executor core
 8. Yarn client mode vs cluster mode
 
+ both strategies use the cluster to distribute tasks; the difference is where the "driver program" runs: 
+ 
+ CLUSTER MODE:
+ 
+ In yarn-cluster mode, the driver runs in the Application Master.
+ This means that the same process is responsible for both driving the application and requesting resources from YARN, and this process runs inside a YARN container. 
+ The client that starts the app doesn’t need to stick around for its entire lifetime.
+ The yarn-cluster mode is not well suited to using Spark interactively, 
+ 
+ CLIENT MODE:
+ 
+ but the yarn-client mode is. Spark applications that require user input, 
+ like spark-shell and PySpark, need the Spark driver to run inside the client process that initiates the Spark application. 
+ In yarn-client mode, the Application Master is merely present to request executor containers from YARN. 
+ The client communicates with those containers to schedule work after they start:
+
 
 9. What is RDD and what do you understand by partitions?
 10. What do you understand by Fault tolerance in Spark?
@@ -88,7 +104,6 @@ Spark Executor:
 12. Why Lazy evaluation is important in Spark?
 real computations happens when we call the action. 
 13. Transformations vs actions
-
 
 14. Map vs FlatMap
 
@@ -158,8 +173,23 @@ seqOp: Sequential operation is an operation of finding maximum marks (operation 
 combOp: Combiner operation is an operation of finding maximum marks from two values (operation on aggregated data of all partitions)
 
 
-22. Briefly explain about Spark Accumulator
+22. Briefly explain about Spark Accumulator?
+
+Spark Accumulators are shared variables which are only “added” through an associative and commutative operation and are 
+used to perform counters (Similar to Map-reduce counters) or sum operations
+
+Spark by default provides accumulator methods for long, double and collection types. All these methods are present in SparkContext 
+class and return LongAccumulator, DoubleAccumulator, and CollectionAccumulator respectively.
+
+https://sparkbyexamples.com/spark/spark-accumulators/
+
 23. What do you mean by Broadcast variables?
+
+In Spark RDD and DataFrame, Broadcast variables are read-only shared variables that are cached and available on all nodes in a cluster in-order to access or use by the tasks. Instead of sending this data along with every task, spark distributes broadcast
+variables to the machine using efficient broadcast algorithms to reduce communication costs.
+
+https://sparkbyexamples.com/spark/spark-broadcast-variables/
+
 24. Spark UDF functions, Why one should avoid UDF?
 25. Why one should avoid RDDs, what is the alternative?
 26. What are the benefits of a data frame?
