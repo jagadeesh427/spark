@@ -81,13 +81,22 @@ Spark Executor:
 7. Executor vs Executor core
 8. Yarn client mode vs cluster mode
 
+
 9. What is RDD and what do you understand by partitions?
 10. What do you understand by Fault tolerance in Spark?
 11. Spark vs Yarn Fault tolerance
 12. Why Lazy evaluation is important in Spark?
+real computations happens when we call the action. 
 13. Transformations vs actions
+
+
 14. Map vs FlatMap
+
+map and flatmap both are transformations . map  gets row as input and generate a tow as output 
 15. Spark Map vs Map Partition
+map converts each element of the source RDD into a single element of the result  RDD by applying function.
+Map partition convert convert each partition of the source RDD into multiple elements of the result.
+
 16. Wide vs Narrow transformations
 
 narrow transformations are esult of map(), filter. the elements that need to be compute records in
@@ -109,9 +118,46 @@ And the merging of values for each key is done after the shuffle. Here lot of da
 resulting in out of memory issue.
 
 18. What do you understand by Spark Lineage
+set of transformation operations that are used to create a final transformation that we are intesrested.
 19. Spark Lineage vs Spark DAG
+
+spark lineage is logical plan
+
+spark DAG is a physical plan
 20. Spark cache vs Spark persist
+Spark Cache and persist are optimization techniques for iterative and interactive 
+Spark applications to improve the performance of the jobs or applications.
+
+Both caching and persisting are used to save the Spark RDD, Dataframe and Dataset’s. But, the difference is, RDD cache() 
+method default saves it to memory (MEMORY_ONLY) whereas persist() method is used to store it to user-defined storage level
+cost effiecient , time efficeint , execution time
+
 21. What do you understand by AggregateByKey and CombineByKey?
+
+ReduceByKey and GroupByKey:
+
+While both reducebykey and groupbykey will produce the same answer, the reduceByKey example works much better on a large dataset.
+That's because Spark knows it can combine output with a common key on each partition before shuffling the data.
+
+CombineByKey:
+
+combineByKey can be used when you are combining elements but your return type differs from your input value type. 
+Spark combineByKey is a transformation operation on PairRDD (i.e. RDD with key/value pair). 
+It is a wider operation as it requires shuffle in the last stage.
+
+
+aggregateByKey:
+AggregateByKey is same like combineByKey and there is slight difference in functioning and arguments. The aggregateByKey function is used to aggregate the values for each key and adds the potential to return a different value type.
+
+The three parameters of aggregateByKey function,
+
+zeroValue: As we are finding maximum marks out of all subjects we should use Double.MinValue (which is also known as an accumulator)
+
+seqOp: Sequential operation is an operation of finding maximum marks (operation at each partition level data)
+
+combOp: Combiner operation is an operation of finding maximum marks from two values (operation on aggregated data of all partitions)
+
+
 22. Briefly explain about Spark Accumulator
 23. What do you mean by Broadcast variables?
 24. Spark UDF functions, Why one should avoid UDF?
