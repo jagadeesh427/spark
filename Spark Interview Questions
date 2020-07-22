@@ -191,12 +191,17 @@ variables to the machine using efficient broadcast algorithms to reduce communic
 https://sparkbyexamples.com/spark/spark-broadcast-variables/
 
 24. Spark UDF functions, Why one should avoid UDF?
+
+https://sparkbyexamples.com/spark/spark-sql-udf/
+
 25. Why one should avoid RDDs, what is the alternative?
 26. What are the benefits of a data frame?
 27. What do you understand by Vectorized UDF?
 28. Which one is better and when you should use, RDDs, Dataframe and Datasets?
 29. Why Spark Dataset is typesafe?
 30. Explain about Repartition and Coalesce.
+
+https://sparkbyexamples.com/spark/spark-repartition-vs-coalesce/
 31. How to read JSON from Spark?
 32. Explain about Spark WIndow functions and it’s usage.
 33. Spark Rank vs Dense Rank
@@ -222,11 +227,39 @@ https://sparkbyexamples.com/spark/spark-broadcast-variables/
 53. Explain dynamic resource allocation in Spark
 54. Why fold-left and fold-right are not supported in Spark?
 55. How to decide the number of executors and memory for any spark job?
+core, memory
+ atleast 1 core for OS operations in all the nodes
+ 1Gb memory for yarn application master
+ 
+ leave atleast 2GB for off heap memory
+ 
+ memory overhead in spark and yarn required for direct buffers.
+ is a off heap memory . in JVM we have heap where all obects are created.
+ we can get off heap memory also from jvm direct buffers all shuffle operations can happen through that.
+
 56. Different types of cluster managers in spark
+
+1.standalone
+2. mesos
+3. yarn
+
 57. Can you explain how to minimize data transfers while working with Spark?
+
+1.using broadcast variables
+2. using reduceByKey instead of gropuByKey
+
 58. What are the different levels of persistence in Spark?
+memory_only
+memory_and_disk
+disk_only
+memory_Ser
+memory_and_disk_ser
+disk_Ser
+memory_and_disk_ser
 59. What is the function of filer()?
 60. Define Partitions in Apache Spark?
+https://sparkbyexamples.com/spark/spark-repartition-vs-coalesce/
+
 61. What is the difference between reducing () and take() function?
 62. Define YARN in Spark?
 63. Can we trigger automated clean-ups in Spark?
